@@ -1,59 +1,164 @@
-function getComputerChoice() {
-  let choice = Math.floor(Math.random() * 3);
+let compChoice = { Value: "" };
+let playerChoice;
+let compChoiceInt = 0;
+let playerChoiceInt = 0;
 
-  if (choice === 0) {
-    return "rock";
-  } else if (choice === 1) {
-    return "paper";
-  }
-  return "scissor";
-}
+const buttons = document.querySelectorAll(".btn");
 
-function playRound(playerSelection, computerSelection) {
-  if (playerSelection == computerSelection) {
-    console.log("Dang. Tie!");
-    return "tie";
-  } else if (
-    (playerSelection == "rock" && computerSelection == "scissor") ||
-    (playerSelection == "paper" && computerSelection == "rock") ||
-    (playerSelection == "scissor" && computerSelection == "paper")
-  ) {
-    console.log("Winner!");
-    return "win";
-  } else {
-    console.log("Looser...");
-    return "loose";
-  }
-}
+let playerScore = 0;
+let compScore = 0;
 
-function game() {
-  let scoreUser = 0;
-  let scoreComputer = 0;
+const player = document.querySelector(".text");
+player.textContent = `Player Score: ${playerScore}`;
 
-  for (let i = 0; i < 5; i++) {
-    let playerSelection = prompt("Rock, paper or scissor? ");
-    let computerSelection = getComputerChoice();
+const computer = document.querySelector("#comp-score");
+computer.textContent = `Computer Score: ${compScore}`;
 
-    let result = playRound(playerSelection, computerSelection);
+const output = document.querySelector("#output");
+output.textContent = "May the Best Person Win!";
 
-    if (result == "loose") {
-      scoreComputer++;
-    } else if (result == "win") {
-      scoreUser++;
+buttons.forEach((button) => {
+  button.addEventListener("click", () => {
+    playerChoice = button.id;
+    if (playerChoice == "rock") {
+      playerChoiceInt = 0;
+    } else if (playerChoice == "paper") {
+      playerChoiceInt = 1;
+    } else if (playerChoice == "scissors") {
+      playerChoiceInt = 2;
     }
+    compChoiceInt = computerPlay(compChoice);
+    playGame();
+  });
+});
 
-    console.log(
-      "Your score: " + scoreUser + ". Computer's score: " + scoreComputer + "."
-    );
+function computerPlay(compChoice) {
+  let choiceNum = Math.floor(Math.random() * 3);
+  if (choiceNum == 0) {
+    compChoice.Value = "rock";
+  } else if (choiceNum == 1) {
+    compChoice.Value = "paper";
+  } else if (choiceNum == 2) {
+    compChoice.Value = "scissors";
   }
-
-  if (scoreUser > scoreComputer) {
-    return "You are the winner!";
-  } else if (scoreUser < scoreComputer) {
-    return "You are a looser...";
-  } else {
-    return "Oops.... Tie..";
+  return choiceNum;
+}
+function playRound() {
+  let win_array = [
+    [0, 2, 1],
+    [1, 0, 2],
+    [2, 1, 0],
+  ];
+  let result = win_array[playerChoiceInt][compChoiceInt];
+  if (result === 0) {
+    output.textContent = `It's a tie! You choose ${playerChoice} and the computer choose ${compChoice.Value}`;
+  } else if (result === 1) {
+    output.textContent = `You won! You choose ${playerChoice} and the computer choose ${compChoice.Value}`;
+    playerScore++;
+  } else if (result === 2) {
+    output.textContent = `You loose! You choose ${playerChoice} and the computer choose ${compChoice.Value}`;
+    compScore++;
   }
 }
 
-console.log(game());
+function playGame() {
+  output.textContent = "Choose Rock, Paper or Scissors";
+  playRound();
+  player.textContent = `Player Score: ${playerScore}`;
+  computer.textContent = `Computer Score: ${compScore}`;
+
+  if (playerScore === 5) {
+    output.textContent = "You Won the Game! Congrats";
+    playerScore = 0;
+    compScore = 0;
+    player.textContent = `Player Score: ${playerScore}`;
+    computer.textContent = `Computer Score: ${compScore}`;
+  } else if (compScore == 5) {
+    output.textContent = "You Lost the game:/ Maybe find something else to do?";
+    playerScore = 0;
+    compScore = 0;
+    player.textContent = `Player Score: ${playerScore}`;
+    computer.textContent = `Computer Score: ${compScore}`;
+  }
+}
+
+// function getComputerChoice() {
+//   let choice = Math.floor(Math.random() * 3);
+
+//   if (choice === 0) {
+//     return "rock";
+//   } else if (choice === 1) {
+//     return "paper";
+//   }
+//   return "scissor";
+// }
+
+// function playRound(playerSelection, computerSelection) {
+//   const container = document.querySelector(".results");
+//   const score = document.createElement("p");
+//   if (playerSelection == computerSelection) {
+//     return "T";
+//     score.textContent = "Dang. Tie!";
+//   } else if (
+//     (playerSelection == "rock" && computerSelection == "scissor") ||
+//     (playerSelection == "paper" && computerSelection == "rock") ||
+//     (playerSelection == "scissor" && computerSelection == "paper")
+//   ) {
+//     return "W";
+//     score.textContent = "Winner!";
+//   } else {
+//     return "L";
+//     score.textContent = "Looser...";
+//   }
+
+//   container.appendChild(score);
+// }
+
+// function game(playerSelection) {
+//   const score = document.querySelector(".score");
+//   const winner = document.querySelector(".winner");
+
+//   let scoreUser = 0;
+//   let scoreComputer = 0;
+
+//   while (scoreUser !== 5 || scoreComputer !== 5) {
+//     // Display Score
+
+//     let computerSelection = getComputerChoice();
+
+//     let result = playRound(playerSelection, computerSelection);
+
+//     if (result === "L") {
+//       scoreComputer++;
+//     } else if (result === "W") {
+//       scoreUser++;
+//     }
+//   }
+
+//   // Display Winner
+
+//   for (let i = 0; i < 5; i++) {
+//     let result = playRound(playerSelection, computerSelection);
+
+//     if (result == "loose") {
+//       scoreComputer++;
+//     } else if (result == "win") {
+//       scoreUser++;
+//     }
+
+//     console.log(
+//       "Your score: " + scoreUser + ". Computer's score: " + scoreComputer + "."
+//     );
+//   }
+
+//   if (scoreUser > scoreComputer) {
+//     return "You are the winner!";
+//   } else if (scoreUser < scoreComputer) {
+//     return "You are a looser...";
+//   } else {
+//     return "Oops.... Tie..";
+//   }
+// }
+
+// results.textContent = "HelloWorld";
+// console.log(game());
